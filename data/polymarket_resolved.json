@@ -1,0 +1,106 @@
+[
+  {
+    "id": "3030296",
+    "question": "Will the price of Ethereum be above $2,000 on July 29?",
+    "market_prob": 0.0005,
+    "outcome": 0,
+    "close_date": "2026-07-29",
+    "context": null
+  },
+  {
+    "id": "3030292",
+    "question": "Will the price of Ethereum be above $1,800 on July 29?",
+    "market_prob": 0.9995,
+    "outcome": 1,
+    "close_date": "2026-07-29",
+    "context": null
+  },
+  {
+    "id": "3030298",
+    "question": "Will the price of Ethereum be above $2,100 on July 29?",
+    "market_prob": 0.0005,
+    "outcome": 0,
+    "close_date": "2026-07-29",
+    "context": null
+  },
+  {
+    "id": "3030350",
+    "question": "Will the price of Bitcoin be above $68,000 on July 29?",
+    "market_prob": 0.0005,
+    "outcome": 0,
+    "close_date": "2026-07-29",
+    "context": null
+  },
+  {
+    "id": "3030328",
+    "question": "Will the price of Bitcoin be above $58,000 on July 29?",
+    "market_prob": 0.9995,
+    "outcome": 1,
+    "close_date": "2026-07-29",
+    "context": null
+  },
+  {
+    "id": "3030355",
+    "question": "Will the price of Bitcoin be above $70,000 on July 29?",
+    "market_prob": 0.0005,
+    "outcome": 0,
+    "close_date": "2026-07-29",
+    "context": null
+  },
+  {
+    "id": "3030326",
+    "question": "Will the price of Bitcoin be above $56,000 on July 29?",
+    "market_prob": 0.9995,
+    "outcome": 1,
+    "close_date": "2026-07-29",
+    "context": null
+  },
+  {
+    "id": "3030346",
+    "question": "Will the price of Bitcoin be above $66,000 on July 29?",
+    "market_prob": 0.0105,
+    "outcome": 0,
+    "close_date": "2026-07-29",
+    "context": null
+  },
+  {
+    "id": "3030290",
+    "question": "Will the price of Ethereum be above $1,700 on July 29?",
+    "market_prob": 0.9985,
+    "outcome": 1,
+    "close_date": "2026-07-29",
+    "context": null
+  },
+  {
+    "id": "3030339",
+    "question": "Will the price of Bitcoin be above $62,000 on July 29?",
+    "market_prob": 0.9995,
+    "outcome": 1,
+    "close_date": "2026-07-29",
+    "context": null
+  },
+  {
+    "id": "3104031",
+    "question": "Will Elon Musk post 140-164 tweets from July 27 to July 29, 2026?",
+    "market_prob": 0.0005,
+    "outcome": 0,
+    "close_date": "2026-07-29",
+    "context": null
+  },
+  {
+    "id": "3124901",
+    "question": "Will the highest temperature in Taipei be 35\u00b0C on July 29?",
+    "market_prob": 0.0005,
+    "outcome": 0,
+    "close_date": "2026-07-29",
+    "context": null
+  },
+  {
+    "id": "3128583",
+    "question": "Will WTI Crude Oil (WTI) hit (HIGH) $85 in July?",
+    "market_prob": 0.9995,
+    "outcome": 1,
+    "close_date": "2026-07-29",
+    "context": null
+  }
+]

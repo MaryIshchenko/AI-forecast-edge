@@ -1,0 +1,66 @@
+[
+  {
+    "id": "sample-01",
+    "question": "Will the Federal Reserve cut its target interest rate at its March 2026 meeting?",
+    "market_prob": 0.62,
+    "outcome": 1,
+    "close_date": "2026-03-18",
+    "context": null
+  },
+  {
+    "id": "sample-02",
+    "question": "Will a Category 5 hurricane make landfall in the continental US in 2026?",
+    "market_prob": 0.18,
+    "outcome": 0,
+    "close_date": "2026-11-30",
+    "context": null
+  },
+  {
+    "id": "sample-03",
+    "question": "Will the S&P 500 close above 6500 before July 1, 2026?",
+    "market_prob": 0.47,
+    "outcome": 0,
+    "close_date": "2026-07-01",
+    "context": null
+  },
+  {
+    "id": "sample-04",
+    "question": "Will SpaceX complete a crewed Starship flight in Q1 2026?",
+    "market_prob": 0.09,
+    "outcome": 0,
+    "close_date": "2026-03-31",
+    "context": null
+  },
+  {
+    "id": "sample-05",
+    "question": "Will inflation (US CPI YoY) print below 3.0% for any month in Q1 2026?",
+    "market_prob": 0.55,
+    "outcome": 1,
+    "close_date": "2026-04-10",
+    "context": null
+  },
+  {
+    "id": "sample-06",
+    "question": "Will the incumbent win the special election in the sample district held in February 2026?",
+    "market_prob": 0.71,
+    "outcome": 1,
+    "close_date": "2026-02-10",
+    "context": null
+  },
+  {
+    "id": "sample-07",
+    "question": "Will a new COVID-19 variant be designated 'variant of concern' by the WHO before June 2026?",
+    "market_prob": 0.12,
+    "outcome": 0,
+    "close_date": "2026-06-01",
+    "context": null
+  },
+  {
+    "id": "sample-08",
+    "question": "Will OpenAI or Anthropic announce a model with a 10M+ token context window before May 2026?",
+    "market_prob": 0.33,
+    "outcome": 1,
+    "close_date": "2026-05-01",
+    "context": null
+  }
+]
