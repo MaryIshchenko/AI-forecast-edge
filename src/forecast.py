@@ -11,9 +11,12 @@ import os
 import random
 import re
 import statistics
+import sys
+import time
 from abc import ABC, abstractmethod
 
 DEFAULT_MODEL = "claude-sonnet-5"
+MAX_RETRIES = 5
 
 PROMPT_TEMPLATE = """You are a professional forecaster. Estimate the probability that the \
 following question resolves YES.
@@ -67,7 +70,9 @@ class LLMForecaster(Forecaster):
         temperature: float = 1.0,
         api_key: str | None = None,
         retrieval: bool = False,
-        max_tokens: int = 300,
+        # Must cover extended thinking too: at 300, a run hit max_tokens mid-thought
+        # with zero output text (verified live) -- this needs real headroom.
+        max_tokens: int = 2048,
     ):
         try:
             import anthropic
@@ -84,6 +89,7 @@ class LLMForecaster(Forecaster):
             )
 
         self._client = anthropic.Anthropic(api_key=key)
+        self._anthropic = anthropic  # kept for exception types in _single_run
         self.model = model
         self.n_ensemble = n_ensemble
         self.temperature = temperature
@@ -110,12 +116,27 @@ class LLMForecaster(Forecaster):
         context_block = f"\nRelevant context: {context}\n" if context else ""
         prompt = PROMPT_TEMPLATE.format(question=question, context_block=context_block)
 
-        response = self._client.messages.create(
-            model=self.model,
-            max_tokens=self.max_tokens,
-            temperature=self.temperature,
-            messages=[{"role": "user", "content": prompt}],
-        )
+        response = None
+        for attempt in range(1, MAX_RETRIES + 1):
+            try:
+                response = self._client.messages.create(
+                    model=self.model,
+                    max_tokens=self.max_tokens,
+                    temperature=self.temperature,
+                    messages=[{"role": "user", "content": prompt}],
+                )
+                break
+            except self._anthropic.RateLimitError:
+                wait = 2 ** attempt
+                print(f"  rate limited, backing off {wait}s...", file=sys.stderr)
+                time.sleep(wait)
+            except self._anthropic.APIStatusError as e:
+                if e.status_code < 500 or attempt == MAX_RETRIES:
+                    raise
+                time.sleep(2 ** attempt)
+        if response is None:
+            return None
+
         text = "".join(
             block.text for block in response.content if getattr(block, "type", None) == "text"
         )

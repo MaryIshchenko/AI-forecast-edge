@@ -11,8 +11,16 @@ create table if not exists questions (
     context       text,
     market_prob   numeric(5, 4),             -- crowd baseline at time of question creation, null if none
     close_date    date not null,
+    category      text,                      -- source-provided topic/category (e.g. Manifold group slug)
+    volume        numeric,                   -- trading volume in the source's native unit
+    liquidity     numeric,                   -- source-provided liquidity measure, null if not applicable
     created_at    timestamptz not null default now()
 );
+
+-- Additive migration: safe to re-run against a DB created before these columns existed.
+alter table questions add column if not exists category text;
+alter table questions add column if not exists volume numeric;
+alter table questions add column if not exists liquidity numeric;
 
 create table if not exists predictions (
     id            uuid primary key default gen_random_uuid(),
