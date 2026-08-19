@@ -1,8 +1,8 @@
 # ai-forecast-edge
 
-The first experiment before you build anything: does your AI forecast better than the crowd? If it doesn't, no legal structure or app matters. This repo answers that cheaply.
+Before building anything else — an app, a legal structure, a business — I want to answer one question: can an AI actually forecast real-world events better than a prediction market crowd? If the answer is no, nothing else matters yet. This repo is how I'm testing that, cheaply, before committing to more.
 
-The "model" is not trained weights — it's a scaffold around Claude (ensemble of runs, median aggregation, calibration). The edge lives in the scaffold, not the weights.
+The "model" here isn't trained weights — it's a scaffold I built around Claude (an ensemble of independent runs, median aggregation, calibration checks). Any edge that shows up lives in that scaffold, not in the underlying weights.
 
 ## Run it in 30 seconds (no API key)
 
@@ -10,13 +10,13 @@ The "model" is not trained weights — it's a scaffold around Claude (ensemble o
 python src/run_experiment.py --mock
 ```
 
-This runs the whole pipeline on 8 sample questions with a fake forecaster so you can see the scoring, bootstrap confidence read, `out/results.csv`, and `out/calibration.png`. The mock has no real edge, so the crowd "wins" — that's the test correctly refusing to flatter you.
+This runs the whole pipeline on 8 sample questions with a fake forecaster, to see the scoring, bootstrap confidence read, `out/results.csv`, and `out/calibration.png`. The mock has no real edge, so the crowd "wins" — that's the test correctly refusing to flatter me.
 
 ## Run it for real
 
 ```bash
 pip install -r requirements.txt
-cp .env.example .env    # add your ANTHROPIC_API_KEY
+cp .env.example .env    # add ANTHROPIC_API_KEY
 python src/run_experiment.py --data data/your_resolved.json --n-ensemble 5
 ```
 
@@ -27,7 +27,7 @@ For a backtest on already-resolved questions, do not give the model web search �
 - Use questions that resolved after the model's training cutoff, and
 - run with retrieval off.
 
-Then the model can neither recall nor look up the outcome. Retrieval is only honest for open questions in the live app, where the future genuinely isn't known. This is a QA/leakage problem, which is your strength — treat it as the thing most likely to give you a fake positive.
+Then the model can neither recall nor look up the outcome. Retrieval is only honest for open questions in the live app, where the future genuinely isn't known. This is a QA/leakage problem, which happens to be my strength — I'm treating it as the thing most likely to produce a fake positive.
 
 ## How to read the output
 
@@ -44,7 +44,7 @@ Then the model can neither recall nor look up the outcome. Retrieval is only hon
 `src/kalshi_fetcher.py` pulls settled Kalshi markets (public read, no auth needed) and writes them straight into the experiment format:
 
 ```bash
-# Only markets that closed after your model's cutoff — this is the leakage guard.
+# Only markets that closed after the model's training cutoff — this is the leakage guard.
 python src/kalshi_fetcher.py --limit 200 --min-close-date 2026-02-01 --out data/kalshi_resolved.json
 python src/run_experiment.py --data data/kalshi_resolved.json --n-ensemble 5
 ```
@@ -69,6 +69,8 @@ Confirm current endpoints/terms at https://docs.polymarket.com before a big pull
 
 ## Files
 
+Offline backtest (JSON files in `data/`, no database needed):
+
 ```
 src/scoring.py            Brier, log loss, calibration, bootstrap  (pure stdlib)
 src/forecast.py           LLM scaffold + ensemble + MockForecaster
@@ -76,12 +78,21 @@ src/data_loader.py        load resolved questions
 src/kalshi_fetcher.py     pull settled Kalshi markets
 src/polymarket_fetcher.py pull closed Yes/No Polymarket markets
 src/run_experiment.py     orchestrates the go/no-go test
-schema.sql                 Supabase schema for the v0 "AI vs You" app
-data/sample_resolved.json  offline sample so --mock works out of the box
+data/sample_resolved.json offline sample so --mock works out of the box
+```
+
+Live DB pipeline (Postgres, `schema.sql` — the ingestion path for the v0 app below):
+
+```
+src/db.py                 shared Postgres helpers (upsert questions/resolutions/predictions)
+src/manifold_fetcher.py   pull resolved Manifold markets straight into the DB
+src/predict.py            ask the model for a probability on each DB question, resumable
+src/backup_db.py          pg_dump the DB to backups/db_backup.sql, git-tracked
+schema.sql                Supabase schema for the v0 "AI vs You" app
 ```
 
 ## From experiment to v0 app
 
-Once the edge test is positive, `schema.sql` is your Supabase store for the live game: `questions`, one `predictions` row per forecast (AI and each human), `resolutions` for truth, and a `leaderboard` view that computes Brier per predictor — that view is your public "AI vs humans" scoreboard. The forecasting logic in `forecast.py` ports directly to a TypeScript route in your Next.js app; the prompt and median-ensemble idea are identical.
+Once the edge test is positive, `schema.sql` becomes my Supabase store for the live game: `questions`, one `predictions` row per forecast (AI and each human), `resolutions` for truth, and a `leaderboard` view that computes Brier per predictor — that view is the public "AI vs humans" scoreboard. The forecasting logic in `forecast.py` ports directly to a TypeScript route in the Next.js app; the prompt and median-ensemble idea stay identical.
 
-Reminder: keep v0 free-to-play (no money in or out) until the edge is proven and you've had the legal conversation about which real-money structure, if any, to pursue.
+Reminder to myself: keep v0 free-to-play (no money in or out) until the edge is proven and I've had the legal conversation about which real-money structure, if any, to pursue.
